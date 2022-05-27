@@ -51,3 +51,11 @@ func (c *Context) Deadline() (deadline time.Time, ok bool) {
 func (c *Context) Done() <-chan struct{} {
 	return c.BaseContext().Done()
 }
+
+func (c *Context) Error() error {
+	return c.BaseContext().Err()
+}
+
+func (c *Context) Value(key interface{}) interface{} {
+	return c.BaseContext().Value(key)
+}
