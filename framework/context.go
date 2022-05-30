@@ -3,6 +3,7 @@ package framework
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -58,4 +59,39 @@ func (c *Context) Error() error {
 
 func (c *Context) Value(key interface{}) interface{} {
 	return c.BaseContext().Value(key)
+}
+
+//query
+func (c *Context) QueryInt(key string, def int) int {
+	params := c.QueryAll()
+	if vals, ok := params[key]; ok {
+		length := len(vals)
+		if length > 0 {
+			interval, err := strconv.Atoi(vals[length-1])
+			if err != nil {
+				return def
+			}
+			return interval
+		}
+	}
+	return def
+
+}
+func (c *Context) QueryString(key, def string) string {
+	params := c.QueryAll()
+	if vals, ok := params[key]; ok {
+		length := len(vals)
+		if length > 0 {
+			return vals[length-1]
+		}
+		return def
+	}
+	return def
+}
+
+func (c *Context) QueryAll() map[string][]string {
+	if c.request != nil {
+		return map[string][]string(c.request.URL.Query())
+	}
+	return map[string][]string{}
 }
