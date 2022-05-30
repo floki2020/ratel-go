@@ -89,9 +89,29 @@ func (c *Context) QueryString(key, def string) string {
 	return def
 }
 
+func (c *Context) QueryArray(key string, def []string) []string {
+	params := c.QueryAll()
+	if vals, ok := params[key]; ok {
+		return vals
+	}
+	return def
+
+}
+
+//Form Post
+func (c *Context) name() {
+
+}
+
 func (c *Context) QueryAll() map[string][]string {
 	if c.request != nil {
-		return map[string][]string(c.request.URL.Query())
+		return c.request.URL.Query()
+	}
+	return map[string][]string{}
+}
+func (c *Context) FormAll() map[string][]string {
+	if c.request != nil {
+		return c.request.PostForm
 	}
 	return map[string][]string{}
 }
